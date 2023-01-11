@@ -1,46 +1,53 @@
 <?php
 
 // file been called by /delete.php?id={id}   $_GET['id']
-echo '<h1>Update van id ' . $_GET['id'] . '<h1>';
+
 
 include_once('openDB.php');
 
-echo "<p><a href='debiteur.php'>terug naar index</a></p>";
+echo "<p><a href='index.php'>terug naar index</a></p>";
 
-if ($_GET['id']) {
+if (isset($_GET['id'])) {
+    echo '<h1>Update van id ' . $_GET['id'] . '<h1>';
     $id = $_GET['id'];
     try {
         // set the PDO error mode to exception
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $stmt = $conn->prepare("SELECT * FROM debiteur WHERE id=$id");
+        $stmt = $conn->prepare("SELECT * FROM debiteur WHERE Id=$id");
         $stmt->execute();
 
         // set the resulting array to associative
         $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
 
         foreach ($stmt->fetchAll() as $k => $v) {
-            $id = $v['id'];
-            $email = $v['email'];
-            $fname = $v['voornaam'];
-            $mname = $v['tussenvoegsel'];
-            $lname = $v['achternaam'];
-            $currency = $v['currency'];
+            $email = htmlspecialchars($v['email']);
+            $voornaam = $v['voornaam'];
+            $tussen = $v['tussenvoegsel'];
+            $achternaam = $v['achternaam'];
+            $totaal = $v['totaal'];
             echo "
              <form action=\"edit.php\" method='post'>
+
               <label for=\"id\">id:</label><br>
               <input type=\"text\" id=\"id\" name=\"id\" value='$id'><br>
-              <label for=\"email\">email:</label><br>
+
+              <label for=\"email\">Email:</label><br>
               <input type=\"text\" id=\"email\" name=\"email\" value='$email'><br>
-              <label for=\"fname\">fname:</label><br>
-              <input type=\"text\" id=\"fname\" name=\"fname\" value='$fname'><br>
-              <label for=\"mname\">mname:</label><br>
-              <input type=\"text\" id=\"mname\" name=\"mname\" value='$mname'><br>
-              <label for=\"lname\">lname:</label><br>
-              <input type=\"text\" id=\"lname\" name=\"lname\" value='$lname'><br>
-              <label for=\"currency\">currency:</label><br>
-              <input type=\"text\" id=\"currency\" name=\"currency\" value='$currency'><br>
+
+              <label for=\"voornaam\">Voornaam:</label><br>
+              <input type=\"text\" id=\"voornaam\" name=\"voornaam\" value='$voornaam'><br>
+
+              <label for=\"tussenvoegsel\">Tussenvoegsel:</label><br>
+              <input type=\"text\" id=\"tussenvoegsel\" name=\"tussenvoegsel\" value='$tussen'><br>
+              
+              <label for=\"achternaam\">Achternaam:</label><br>
+              <input type=\"text\" id=\"achternaam\" name=\"achternaam\" value='$achternaam'><br>
+              
+              <label for=\"Totaal\">Totaal:</label><br>
+              <input type=\"text\" id=\"Totaal\" name=\"Totaal\" value='$totaal'><br>
+
               <input type=\"submit\" value=\"Wegschrijven\">
-            </form> 
+              </form> 
             
             <a href='index.php'>Terug naar index</a>
             ";
@@ -55,26 +62,30 @@ if ($_GET['id']) {
 
 if ($_POST) {
     try {
-        $id = $_POST['id'];
+        $id = $_POST['id'];        
         $email = $_POST['email'];
         $voornaam = $_POST['voornaam'];
-        $tussenvoegsel = $_POST['tussenvoegsel'];
+        $tussen = $_POST['tussenvoegsel'];
         $achternaam = $_POST['achternaam'];
-        $currency = $_POST['currency'];
+        $totaal = $_POST['Totaal'];
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-        $sql = "UPDATE debiteur 
+        $sql = "UPDATE debiteur
                     SET 
-                        email='$email',
-                        voornaam='$voornaam',
-                        tussenvoegsel='$tussenvoegsel',
-                        achternaam='$achternaam',
-                        currency='$currency',
-                WHERE id=$id";
+                        email= :email,
+                        voornaam= :voornaam, 
+                        tussenvoegsel= :tussenvoegsel,
+                        achternaam= :achternaam,
+                        Totaal= :Totaal
+                WHERE Id=$id";
 
         // Prepare statement
         $stmt = $conn->prepare($sql);
-
+        $stmt->bindParam(":email", $email);
+        $stmt->bindParam(":voornaam", $voornaam);
+        $stmt->bindParam(":tussenvoegsel", $tussen);
+        $stmt->bindParam(":achternaam", $achternaam);
+        $stmt->bindParam(":Totaal", $totaal);
         // execute the query
         $stmt->execute();
 
