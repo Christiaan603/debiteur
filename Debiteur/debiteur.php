@@ -3,21 +3,22 @@ echo "<h1>testen</h1>";
 
 echo "<a href='new.php'>Nieuw</a>";
 echo "<table style='border: solid 1px black;'>";
-$id = 'id';
-$email= 'email';
-$voornaam = 'voornaam';
-$tussenvoegsel = 'tussenvoegsel';
-$achternaam = 'achternaam';
-$currency = 'currency';
-echo '<tr><th>'.$id.'</th><th>'.$email.'</th><th>'.$voornaam.'</th><th>'.$tussenvoegsel.'</th><th>'.$achternaam.'</th><th>'.$currency.'</th><th>Action</th></tr>';
-
+echo "<tr>
+<th>id</th>
+<th>Email</th>
+<th>voornaam</th>
+<th>tussenvoegsel</th>
+<th>achternaam</th>
+<th>totaal</th>
+<th>Action</th>
+</tr>";
 class TableRows extends RecursiveIteratorIterator {
   function __construct($it) {
     parent::__construct($it, self::LEAVES_ONLY);
   }
 
   function current() {
-    return "<td style='width:150px;border:1px solid black;'>" . parent::current(). "</td>";
+    return "<td style='width:150px;border:1px solid black;'>" . htmlspecialchars(parent::current()). "</td>";
   }
 
   function beginChildren() {
@@ -41,10 +42,11 @@ try {
     echo $v;
     if ($k=='id') {
       $id = strip_tags($v);
+      $l= 'delete.php?id='.$id;
       $e= 'edit.php?id='.$id;
     }
-    if ($k=='currency') {
-      echo "<td><a href='$e'>E</a></td>";
+    if ($k=='totaal') {
+      echo "<td><a href='$l'>X</a> <a href='$e'>E</a></td>";
     }
   }
 } catch(PDOException $e) {
@@ -53,5 +55,5 @@ try {
 $conn = null;
 echo "</table>";
 
-echo "<a href='new.php'>Nieuw</a>";
+
 ?>
