@@ -1,6 +1,13 @@
 <?php
 echo "<table style='border: solid 1px black;'>";
-echo "<tr><th>Id</th><th>adress</th><th>email</th><th>phone</th></tr>";
+echo "<tr>
+<th>ID</th>
+<th>E-mail</th>
+<th>voornaam</th>
+<th>tussenvoegsel</th>
+<th>achternaam</th>
+<th>Totaal</th>
+</tr>";
 
 class TableRows extends RecursiveIteratorIterator
 {
@@ -11,7 +18,7 @@ class TableRows extends RecursiveIteratorIterator
 
     function current()
     {
-        return "<td style='width:150px;border:1px solid black;'>" . parent::current() . "</td>";
+        return "<td style='width:150px;border:1px solid black;'>" . htmlspecialchars(parent::current()) . "</td>";
     }
 
     function beginChildren()
