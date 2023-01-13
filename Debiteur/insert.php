@@ -42,7 +42,7 @@
 			echo nl2br("\n$id\n $email\n $voornaam\n "
 				. "$tussenvoegsel\n $achternaam\n $totaal");
 		} else{
-			echo "ERROR: Hush! Sorry $sql. "
+			echo "ERROR: Sorry $sql. "
 				. mysqli_error($conn);
 		}
 		
